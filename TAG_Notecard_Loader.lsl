@@ -74,6 +74,11 @@ parseLine(string token, string rest) {
     }
     command = llGetSubString(token, 2, -3); //Extract Just the token.
     list anims = llParseString2List(rest, [], ["|"]);
+    integer i;
+    integer listLen = llGetListLength(anims);
+    for(i=0; i<listLen; i++) {
+        
+    }
     return(setting)
 }
 
