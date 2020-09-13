@@ -95,13 +95,13 @@ list underwaterAnim = [ "hoverIndex", "flyingIndex", "flyingslowIndex", "hoverup
 // corresponding list of animations that we override the overrider with when underwater
 list underwaterOverride = [ "waterTreadIndex", "swimmingIndex", "swimmingIndex", "swimupIndex", "swimdownIndex"];
 
-// This is an ugly hack, because the standing up animation doesn't work quite right
-// (SL is borked, this has been bug reported)
-// If you play a pose overtop the standing up animation, your avatar tends to get
-// stuck in place.
-// This is a list of anims that we'll stop automatically
+// This is an ugly hack, because the standing up animation doesn't work quite
+// right (SL is borked, this has been bug reported) If you play a pose overtop
+// the standing up animation, your avatar tends to get stuck in place. This is a
+// list of anims that we'll stop automatically
 list autoStop = [ 5, 6, 19 ];
-// Amount of time we'll wait before autostopping the animation (set to 0 to turn off autostopping)
+// Amount of time we'll wait before autostopping the animation (set to 0 to turn
+// off autostopping)
 float autoStopTime = 1.5;
 
 // How long before flipping stand animations
@@ -112,8 +112,9 @@ integer standTimeDefault = 30;
 float timerEventLength = 0.25;
 
 // The minimum time between events.
-// While timerEvents are scaled automatically by the server, control events are processed
-// much more aggressively, and needs to be throttled by this script
+// While timerEvents are scaled automatically by the server, control events
+// are processed much more aggressively, and needs to be throttled by this
+// script
 float minEventDelay = 0.25;
 
 // The key for the typing animation
