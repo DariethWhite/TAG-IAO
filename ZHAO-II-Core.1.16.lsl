@@ -16,16 +16,16 @@ list animState = [ "Sitting on Ground", "Sitting", "Striding", "Crouching", "Cro
                    "Turning Right", "Turning Left", "Walking", "Landing", "Standing" ];
 
 
-// Logic change - we now have a list of tokens. The 'overrides' list is the same length as this,
-// i.e. it has one entry per token, *not* one entry per animation. Multiple options for a token
-// are stored as | separated strings in a single list entry. This was done to save memory, and
-// allow a larger number of stands etc. All the xxxIndex variables now refer to the token index,
-// since that's how long 'overrides' is.
-
-// List of internal tokens. This *must* be in the same sequence as the animState list. Note that
-// we combine some tokens after the notecard is read (striding/walking, landing/soft landing), etc.
-// The publicized tokens list only contains one entry for each pair, but we'll accept both, and
-// combine them later
+// Logic change - we now have a list of tokens. The 'overrides' list is the same
+// length as this, i.e. it has one entry per token, *not* one entry per
+// animation. Multiple options for a token are stored as | separated strings in
+// a single list entry. This was done to save memory, and allow a larger number
+// of stands etc. All the xxxIndex variables now refer to the token index, since
+// that's how long 'overrides' is.  List of internal tokens. This *must* be in
+// the same sequence as the animState list. Note that we combine some tokens
+// after the notecard is read (striding/walking, landing/soft landing), etc. The
+// publicized tokens list only contains one entry for each pair, but we'll
+// accept both, and combine them later
 //list tokens = [
 //    "[ Sitting On Ground ]",    // 0
 //    "[ Sitting ]",              // 1
