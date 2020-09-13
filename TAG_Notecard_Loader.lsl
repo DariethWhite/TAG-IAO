@@ -60,6 +60,7 @@ loadNoteCard(string card) {
                 string rest = llGetSubString(line, tend+1, -1);
                 string setting = parseLine(token, line);
             }
+            else {}
         }
     }
 }
@@ -77,7 +78,8 @@ parseLine(string token, string rest) {
     integer i;
     integer listLen = llGetListLength(anims);
     for(i=0; i<listLen; i++) {
-        
+        string anim = llList2String(anims, i);
+        anim = osStringReplace(anim, "|", "\\|");
     }
     return(setting)
 }
