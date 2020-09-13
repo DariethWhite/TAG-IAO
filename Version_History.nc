@@ -4,6 +4,7 @@ Stephan Kern 2020-09-13
     Relocate README style stuff to a new file.
     Relocate VersionHistory to its own file.
     Upgrade license to GPL v3.
+    Create New Card Loader script.
 
 Marcus Gray, 2010-01-03
          ADDED option to disable AO in Mouselook (interface, core)
