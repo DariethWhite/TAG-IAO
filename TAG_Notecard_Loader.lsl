@@ -32,9 +32,12 @@ default {
     }
     link_message(integer sender_num, integer num, string text, key id) {
         command = llGetSubString(text, 0, llSubStringIndex(text, "|")-1);
-        rest = llGetSubString(text, llSubStringIndex(text, "|"), -1);
-        if(command == "LOADCARD") {
-            
+        rest = llGetSubString(text, llSubStringIndex(text, "|")+1, -1);
+        if(command == "LOAD_NC") {
+            loadNoteCard(rest);
+        }
+        if(command == "GETSETTING") { //May need renamed.
+            //returnSetting(rest);
         }
     }
 }
