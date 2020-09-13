@@ -1,3 +1,7 @@
+// TAG-ZHAO-II-Core - Stephan Kern(Darieth WHite)
+// REworking the script to work with OS > 0.9
+// Please see version history Version History.
+
 // ZHAO-II-core - Ziggy Puff, 07/07
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
