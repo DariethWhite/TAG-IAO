@@ -53,6 +53,11 @@ loadNoteCard(string card) {
         lines = osGetNumberOfNotecardLines(card);
         for(i=0; i<lines; i++) {
             line = osGetNotecardLine(card, i);
+            if(llGetSubString(line, 0, 1) == "[ "){ //Line is a token
+                integer tstart = llSubStringIndex(line, "[") ;
+                integer tend = llSubStringIndex(line, "]");
+                string token = llGetSubString(tstart, tend);
+            }
         }
     }
 }
