@@ -59,6 +59,9 @@ loadNoteCard(string card) {
                 string token = llGetSubString(tstart, tend);
                 string rest = llGetSubString(line, tend+1, -1);
                 string setting = parseLine(token, line);
+                if(setting != "INVALID") {
+                    llMessageLinked(LINK_THIS, 0, setting, NULL_KEY);
+                }
             }
             else {}
         }
