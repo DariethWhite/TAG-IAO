@@ -885,12 +885,12 @@ default {
 
     control(key _id, integer _level, integer _edge) {
         if(_edge) {
-            // SL tends to mix animations together on forward or backward walk. It could be because
-            // of anim priorities. This helps stop the default walking anims, so it won't mix with
-            // the desired anim. This also lets the avi turn around on a backwards walk for a more natural
-            // look.
-            // Reverse the order of the checks, since we'll often get the control key combination, but we
-            // may be flying
+            // SL tends to mix animations together on forward or backward walk.
+            // It could be because of anim priorities. This helps stop the
+            // default walking anims, so it won't mix with the desired anim.
+            // This also lets the avi turn around on a backwards walk for a more
+            // natural look. Reverse the order of the checks, since we'll often
+            // get the control key combination, but we may be flying
             if(llGetAnimation(Owner) == "Walking") {
                 if(_level & _edge & (CONTROL_BACK | CONTROL_FWD)) {
                     if(haveWalkingAnim) {
