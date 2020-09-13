@@ -80,6 +80,7 @@ parseLine(string token, string rest) {
     for(i=0; i<listLen; i++) {
         string anim = llList2String(anims, i);
         anim = osStringReplace(anim, "|", "\\|");
+        setting = setting + anim;
     }
     return(setting)
 }
