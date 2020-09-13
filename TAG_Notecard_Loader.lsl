@@ -64,7 +64,7 @@ loadNoteCard(string card) {
     }
 }
 
-parseLine(string token) {
+parseLine(string token, string rest) {
     //llListFindList return -1 on fail, using bitwise not to check.
     integer validToken = ~llListFindList(tokens, [token]);
     string command = "";
@@ -73,7 +73,7 @@ parseLine(string token) {
         return("INVALID");
     }
     command = llGetSubString(token, 2, -3); //Extract Just the token.
-
+    list anims = llParseString2List(rest, [], ["|"]);
     return(setting)
 }
 
