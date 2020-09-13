@@ -462,13 +462,6 @@ string findMultiAnim (integer _animIndex, integer _multiAnimIndex){
     return llList2String( animsList, _multiAnimIndex );
 }
 
-// Print free memory. Separate function to save a few bytes
-printFreeMemory() {
-    integer freemem = llGetFreeMemory();
-    integer memory = (integer)((float)freemem * 100.0 / 65536.0);
-    llOwnerSay( (string)memory + "% memory free ("+(string)freemem+" Byte)." );
-}
-
 // Returns true if we should override the current animation
 integer checkAndOverride() {
     if(animOverrideOn && gotPermission){
