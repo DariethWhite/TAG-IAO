@@ -30,4 +30,11 @@ default {
     state_entry() {
         init();
     }
+    link_message(integer sender_num, integer num, string text, key id) {
+        command = llGetSubString(text, 0, llSubStringIndex(text, "|")-1);
+        rest = llGetSubString(text, llSubStringIndex(text, "|"), -1);
+        if(command == "LOADCARD") {
+            
+        }
+    }
 }
