@@ -588,8 +588,6 @@ initialize() {
         llListenRemove( listenHandle );
     listenHandle = llListen( listenChannel, EMPTY, Owner, EMPTY );
     llListenControl( listenHandle, FALSE );
-
-    printFreeMemory();
 }
 
 // STATE
