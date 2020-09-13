@@ -581,7 +581,7 @@ initialize() {
     lastAnimSet = EMPTY;
     lastAnimIndex = noAnimIndex;
     lastAnimState = EMPTY;
-    gotPermission = FALSE;
+    gotPermission = TRUE;
 
     // Create new listener, and turn it off
     if ( listenHandle )
