@@ -7,7 +7,23 @@
 string cardName = "Default";
 
 init() {
-    loadNoteCard();
+    loadNoteCard(cardName);
+}
+
+loadNoteCard(string card) {
+    integer lines;
+    integer i;
+    string line;
+    if(llGetInventoryType(card) != 7) {
+        llOwnerSay("Error: " + card + " card was not found. Check permissions");
+        return;
+    }
+    else {
+        lines = osGetNumberOfNotecardLines(card);
+        for(i=0; i<lines; i++) {
+            line = osGetNotecardLine(card, i);
+        }
+    }
 }
 
 default {
