@@ -50,7 +50,8 @@ loadNoteCard(string card) {
         return;
     }
     else {
-        lines = osGetNumberOfNotecardLines(card);
+        integer lines = osGetNumberOfNotecardLines(card);
+        string command = "END_NC_LOAD|";
         for(i=0; i<lines; i++) {
             line = osGetNotecardLine(card, i);
             if(llGetSubString(line, 0, 1) == "[ "){ //Line is a token
@@ -60,10 +61,13 @@ loadNoteCard(string card) {
                 string rest = llGetSubString(line, tend+1, -1);
                 string setting = parseLine(token, line);
                 if(setting != "INVALID") {
-                    llMessageLinked(LINK_THIS, 0, setting, NULL_KEY);
+                    llOwnerSay("Error on Token:" + token + ". Please check");
+                }
+                else {
+                    command += setting;
                 }
             }
-            else {}
+            llMessageLinked(LINK_THIS, 0, command, "");
         }
     }
 }
