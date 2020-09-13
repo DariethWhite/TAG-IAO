@@ -408,29 +408,27 @@ doNextStand(integer fromUI) {
 // Start or stop typing animation
 typingOverride(integer isTyping) {
     if(isTyping) {
-        if( typingKill ) { // if we totally kill typing anims
+        // if we totally kill typing anims
+        if(typingKill){
             llStopAnimation("type");
-//            typingStatus = FALSE;
+            //typingStatus = FALSE;
         }
-        else
-        {
+        else {
             integer curTypingIndex = 0;
-            if(numTyping > 1) {
+            if(numTyping > 1){
                 curTypingIndex = llFloor( llFrand(numTyping) );
             }
             curTypingAnim = findMultiAnim( typingIndex, curTypingIndex );
             startAnimationList(curTypingAnim);
         }
     }
-    else if( !typingKill )
-    {
+    else if(!typingKill){
         stopAnimationList(curTypingAnim);
     }
 }
 
 // Displays menu of animation choices
-doMultiAnimMenu( integer _animIndex, string _animType, string _currentAnim )
-{
+doMultiAnimMenu( integer _animIndex, string _animType, string _currentAnim ) {
     // Dialog enhancement - Fennec Wind
     // Fix - a no-mod anim with a long name will break this
 
@@ -445,29 +443,27 @@ doMultiAnimMenu( integer _animIndex, string _animType, string _currentAnim )
     list buttons = [];
     integer i;
     string animNames = EMPTY;
-    for ( i=0; i<numAnims; i++ ) {
+    for(i=0; i<numAnims; i++){
         animNames += "\n" + (string)(i+1) + ". " + llList2String( anims, i );
         buttons += [(string)(i+1)];
     }
     // If no animations were configured, say so and just display an "OK" button
-    if ( animNames == EMPTY ) {
+    if(animNames == EMPTY){
         animNames = "\n\nNo overrides have been configured.";
     }
     llListenControl(listenHandle, TRUE);
-    llDialog( Owner, "Select the " + _animType + " animation to use:\n\nCurrently: " + _currentAnim + animNames,
+    llDialog(Owner, "Select the " + _animType + " animation to use:\n\nCurrently: " + _currentAnim + animNames,
               buttons, listenChannel );
 }
 
 // Returns an animation from the multiAnims
-string findMultiAnim( integer _animIndex, integer _multiAnimIndex )
-{
+string findMultiAnim (integer _animIndex, integer _multiAnimIndex){
     list animsList = llParseString2List( llList2String(overrides, _animIndex), [SEPARATOR], [] );
     return llList2String( animsList, _multiAnimIndex );
 }
 
 // Print free memory. Separate function to save a few bytes
-printFreeMemory()
-{
+printFreeMemory() {
     integer freemem = llGetFreeMemory();
     integer memory = (integer)((float)freemem * 100.0 / 65536.0);
     llOwnerSay( (string)memory + "% memory free ("+(string)freemem+" Byte)." );
@@ -475,7 +471,7 @@ printFreeMemory()
 
 // Returns true if we should override the current animation
 integer checkAndOverride() {
-    if ( animOverrideOn && gotPermission ) {
+    if(animOverrideOn && gotPermission){
         animOverride();
         return TRUE;
     }
@@ -483,27 +479,22 @@ integer checkAndOverride() {
 }
 
 // Load all the animation names from a notecard
-loadNoteCard() {
-
-    if ( llGetInventoryKey(notecardName) == NULL_KEY ) {
+loadNoteCard(){
+    if(llGetInventoryKey(notecardName) == NULL_KEY) {
         llOwnerSay( "Notecard '" + notecardName + "' does not exist, or does not have full permissions." );
         notecardName = EMPTY;
         loadInProgress = FALSE;
         return;
     }
-    else {
-
+    else{
         loadInProgress = TRUE;
-
         // Faster events while processing our notecard
-        llMinEventDelay( 0 );
-
+        llMinEventDelay(0);
         // Clear out saved override information, since we now allow sparse notecards
         overrides = [];
         integer i;
-        for ( i=0; i<numOverrides; i++ )
+        for(i=0; i<numOverrides; i++)
             overrides += [EMPTY];
-
         // Clear out multi-anim info as well, since we may end up with fewer options
         // that the last time
         curStandIndex = 0;
@@ -511,29 +502,24 @@ loadNoteCard() {
         curSitAnim = EMPTY;
         curWalkAnim = EMPTY;
         curGsitAnim = EMPTY;
-
         // Start reading the data
         llMessageLinked(LINK_SET, 0, "LOAD_NC|" + notecardName, NULL_KEY);
     }
 }
 
 // Stop loading notecard
-endNotecardLoad()
-{
+endNotecardLoad() {
     loadInProgress = FALSE;
     notecardName = EMPTY;
-
     // Restore the minimum event delay
     llMinEventDelay( minEventDelay );
 }
 
 // Initialize listeners, and reset some status variables
-initialize() {
+initialize(){
     Owner = llGetOwner();
-
     llSetTimerEvent( 0.0 );
-
-    if ( animOverrideOn )
+    if(animOverrideOn)
         llSetTimerEvent( timerEventLength );
 
     lastAnim = EMPTY;
@@ -543,8 +529,9 @@ initialize() {
     gotPermission = TRUE;
 
     // Create new listener, and turn it off
-    if ( listenHandle )
+    if(listenHandle)
         llListenRemove( listenHandle );
+
     listenHandle = llListen( listenChannel, EMPTY, Owner, EMPTY );
     llListenControl( listenHandle, FALSE );
 }
