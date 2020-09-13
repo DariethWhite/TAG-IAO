@@ -1,4 +1,9 @@
-
+Stephan Kern 2020-09-13
+    Remove Print Free Memory -- Pointless in opensim
+    Reformat.
+    Relocate README style stuff to a new file.
+    Relocate VersionHistory to its own file.
+    Upgrade license to GPL v3.
 
 Marcus Gray, 2010-01-03
          ADDED option to disable AO in Mouselook (interface, core)
