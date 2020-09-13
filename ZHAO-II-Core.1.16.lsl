@@ -212,21 +212,21 @@ integer CheckSit()
 }
 
 
-startAnimationList( string _csvAnims ) {
-    list anims = llCSV2List( _csvAnims );
+startAnimationList(string _csvAnims) {
+    list anims = llCSV2List(_csvAnims);
     integer i;
-    for( i=0; i<llGetListLength(anims); i++ )
+    for(i=0; i<llGetListLength(anims); i++)
     {
 //
 //  Mod: Get the special timing parameter
-        list newAnim = llParseStringKeepNulls( llList2String(anims,i), [TIMINGSEPARATOR], []);
+        list newAnim = llParseStringKeepNulls(llList2String(anims,i), [TIMINGSEPARATOR], []);
         string newAnimName = llList2String(newAnim, 0);
 
 
-        if( llGetListLength(newAnim) == 2 )
+        if(llGetListLength(newAnim) == 2)
         {
             integer newStandTime = (integer)llList2String(newAnim, 1);
-            if( newStandTime > 0)
+            if(newStandTime > 0)
                 standTime = (integer)llList2String(newAnim, 1);
             else
                 llOwnerSay("Found improper custom timing parameter for animation \""+ newAnimName + "\" - The value must be greater 0, please correct this!");
@@ -235,50 +235,50 @@ startAnimationList( string _csvAnims ) {
             standTime = dialogStandTime;
 //
 //
-//        llStartAnimation( llList2String(anims,i) );
-        llStartAnimation( newAnimName );
+//        llStartAnimation(llList2String(anims,i));
+        llStartAnimation(newAnimName);
     }
 }
 
-stopAnimationList( string _csvAnims ) {
-    list anims = llCSV2List( _csvAnims );
+stopAnimationList(string _csvAnims) {
+    list anims = llCSV2List(_csvAnims);
     integer i;
-    for( i=0; i<llGetListLength(anims); i++ )
+    for(i=0; i<llGetListLength(anims); i++)
     {
 //
 //  Mod: Get the special timing parameter
-        list newAnim = llParseStringKeepNulls( llList2String(anims,i) ,
+        list newAnim = llParseStringKeepNulls(llList2String(anims,i) ,
             [TIMINGSEPARATOR], [""]);
         string newAnimName = llList2String(newAnim, 0);
 //
 //
-//        llStopAnimation( llList2String(anims,i) );
-        llStopAnimation( newAnimName );
+//        llStopAnimation(llList2String(anims,i));
+        llStopAnimation(newAnimName);
     }
 }
 
-startNewAnimation( string _anim, integer _animIndex, string _state ) {
-    if ( _anim != lastAnimSet ) {
+startNewAnimation(string _anim, integer _animIndex, string _state) {
+    if(_anim != lastAnimSet) {
         string newAnim;
-        if ( lastAnim != EMPTY )
-            stopAnimationList( lastAnim );
-        if ( _anim != EMPTY ) {   // Time to play a new animation
-             list newAnimSet = llParseStringKeepNulls( _anim, [SEPARATOR], [] );
-             newAnim = llList2String( newAnimSet, (integer)llFloor(llFrand(llGetListLength(newAnimSet))) );
+        if(lastAnim != EMPTY)
+            stopAnimationList(lastAnim);
+        if(_anim != EMPTY) {   // Time to play a new animation
+             list newAnimSet = llParseStringKeepNulls(_anim, [SEPARATOR], []);
+             newAnim = llList2String(newAnimSet, (integer)llFloor(llFrand(llGetListLength(newAnimSet))));
 
-             startAnimationList( newAnim );
+             startAnimationList(newAnim);
 
-            if ( llListFindList( autoStop, [_animIndex] ) != -1 ) {
+            if(llListFindList(autoStop, [_animIndex]) != -1) {
                 // This is an ugly hack, because the standing up animation doesn't work quite right
                 // (SL is borked, this has been bug reported)
                 // If you play a pose overtop the standing up animation, your avatar tends to get
                 // stuck in place.
-                if ( lastAnim != EMPTY ) {
-                   stopAnimationList( lastAnim );
+                if(lastAnim != EMPTY) {
+                   stopAnimationList(lastAnim);
                    lastAnim = EMPTY;
                 }
-                llSleep( autoStopTime );
-                stopAnimationList( _anim );
+                llSleep(autoStopTime);
+                stopAnimationList(_anim);
             }
         }
         lastAnim = newAnim;
@@ -290,26 +290,26 @@ startNewAnimation( string _anim, integer _animIndex, string _state ) {
 
 // Figure out what animation we should be playing right now
 animOverride() {
-    string  curAnimState = llGetAnimation( Owner );
+    string  curAnimState = llGetAnimation(Owner);
     integer curAnimIndex;
     integer underwaterAnimIndex;
 
     // Convert the ones we don't handle
-    if ( curAnimState == "Striding" ) {
+    if(curAnimState == "Striding") {
         curAnimState = "Walking";
-    } else if ( curAnimState == "Soft Landing" ) {
+    } else if(curAnimState == "Soft Landing") {
         curAnimState = "Landing";
     }
 
     // Remove the list check, since it only contains one element
     // Check if we need to work around any bugs in llGetAnimation
     // Hack, because, SL really likes to switch between crouch and crouchwalking for no reason
-    if ( curAnimState == "CrouchWalking" ) {
-      if ( llVecMag(llGetVel()) < .5 )
+    if(curAnimState == "CrouchWalking") {
+      if(llVecMag(llGetVel()) < .5)
          curAnimState = "Crouching";
     }
 
-    if ( curAnimState == lastAnimState && curAnimState != "Walking" ) {
+    if(curAnimState == lastAnimState && curAnimState != "Walking") {
         // This conditional not absolutely necessary (In fact it's better if it's not here)
         // But it's good for increasing performance.
         // One of the drawbacks of this performance hack is the underwater animations
@@ -319,86 +319,86 @@ animOverride() {
             em=0;
             return;
         }else{
-            if(em==0){startNewAnimation( EMPTY, noAnimIndex, curAnimState );em=1;}
+            if(em==0){startNewAnimation(EMPTY, noAnimIndex, curAnimState);em=1;}
         }
     }
 
-    curAnimIndex        = llListFindList( animState, [curAnimState] );
-    underwaterAnimIndex = llListFindList( underwaterAnim, [curAnimIndex] );
+    curAnimIndex        = llListFindList(animState, [curAnimState]);
+    underwaterAnimIndex = llListFindList(underwaterAnim, [curAnimIndex]);
 
     // For all the multi-anims, we know the animation name to play. Send
     // in the actual overrides index, since that's what this function
     // expects, not the index into the multi-anim list
-    if ( curAnimIndex == standingIndex ) {
+    if(curAnimIndex == standingIndex) {
         // Sit Anywhere
         if(sitAnywhereOn) {
-            startNewAnimation( curGsitAnim, sitgroundIndex, curAnimState );
+            startNewAnimation(curGsitAnim, sitgroundIndex, curAnimState);
         }
         else
         {
-            if( standOverride ){ // Sity Anywhere is OFF AND Stand AO is on ;)
-                startNewAnimation( curStandAnim, standingIndex, curAnimState );
+            if(standOverride){ // Sity Anywhere is OFF AND Stand AO is on ;)
+                startNewAnimation(curStandAnim, standingIndex, curAnimState);
             }
             else {
-                 startNewAnimation( EMPTY, noAnimIndex, curAnimState);
+                 startNewAnimation(EMPTY, noAnimIndex, curAnimState);
             }
         }
 
     }
-    else if ( curAnimIndex == sittingIndex ) {
+    else if(curAnimIndex == sittingIndex) {
         // Check if sit override is turned off
-        if (( sitOverride == FALSE ) && ( curAnimState == "Sitting" ) && (CheckSit() != TRUE)) {// Seamless Sit
-            startNewAnimation( EMPTY, noAnimIndex, curAnimState );
+        if ((sitOverride == FALSE) && (curAnimState == "Sitting") && (CheckSit() != TRUE)) {// Seamless Sit
+            startNewAnimation(EMPTY, noAnimIndex, curAnimState);
         }
         else {
             if(CheckSit()==TRUE){// Seamless Sit
-            startNewAnimation( curSitAnim, sittingIndex, curAnimState );
+            startNewAnimation(curSitAnim, sittingIndex, curAnimState);
             } else {
-            startNewAnimation( EMPTY, noAnimIndex, curAnimState );
+            startNewAnimation(EMPTY, noAnimIndex, curAnimState);
             }
         }
     }
-    else if ( curAnimIndex == walkingIndex ) {
-        startNewAnimation( curWalkAnim, walkingIndex, curAnimState );
+    else if(curAnimIndex == walkingIndex) {
+        startNewAnimation(curWalkAnim, walkingIndex, curAnimState);
     }
-    else if ( curAnimIndex == sitgroundIndex ) {
-        startNewAnimation( curGsitAnim, sitgroundIndex, curAnimState );
+    else if(curAnimIndex == sitgroundIndex) {
+        startNewAnimation(curGsitAnim, sitgroundIndex, curAnimState);
     }
     else {
-        if ( underwaterAnimIndex != -1 ) {
+        if(underwaterAnimIndex != -1) {
             // Only call llGetPos if we care about underwater anims
             vector curPos = llGetPos();
-            if ( llWater(ZERO_VECTOR) > curPos.z ) {
-                curAnimIndex = llList2Integer( underwaterOverride, underwaterAnimIndex );
+            if(llWater(ZERO_VECTOR) > curPos.z) {
+                curAnimIndex = llList2Integer(underwaterOverride, underwaterAnimIndex);
             }
         }
-        startNewAnimation( llList2String(overrides, curAnimIndex), curAnimIndex, curAnimState );
+        startNewAnimation(llList2String(overrides, curAnimIndex), curAnimIndex, curAnimState);
     }
 }
 
 // Switch to the next stand anim
 doNextStand(integer fromUI) {
-    if ( numStands > 0) {
+    if(numStands > 0) {
         if(!sitAnywhereOn && standOverride) { //no need to change stands if we're sitting anyways ;)
-            if ( randomStands ) {
-                curStandIndex = llFloor( llFrand(numStands) );
+            if(randomStands) {
+                curStandIndex = llFloor(llFrand(numStands));
             } else {
                 curStandIndex = (curStandIndex + 1) % numStands;
             }
 
-            curStandAnim = findMultiAnim( standingIndex, curStandIndex );
-            if ( lastAnimState == "Standing" )
-                startNewAnimation( curStandAnim, standingIndex, lastAnimState );
+            curStandAnim = findMultiAnim(standingIndex, curStandIndex);
+            if(lastAnimState == "Standing")
+                startNewAnimation(curStandAnim, standingIndex, lastAnimState);
 
-            if ( fromUI == TRUE ) {
+            if(fromUI == TRUE) {
                 string newAnimName = llList2String(
                     llParseStringKeepNulls(curStandAnim, [TIMINGSEPARATOR], []), 0);
-                llOwnerSay( "Switching to stand '" + newAnimName + "'." );
+                llOwnerSay("Switching to stand '" + newAnimName + "'.");
             }
         }
     } else {
-        if ( fromUI == TRUE ) {
-            llOwnerSay( "No stand animations configured." );
+        if(fromUI == TRUE) {
+            llOwnerSay("No stand animations configured.");
         }
     }
 
@@ -416,9 +416,9 @@ typingOverride(integer isTyping) {
         else {
             integer curTypingIndex = 0;
             if(numTyping > 1){
-                curTypingIndex = llFloor( llFrand(numTyping) );
+                curTypingIndex = llFloor(llFrand(numTyping));
             }
-            curTypingAnim = findMultiAnim( typingIndex, curTypingIndex );
+            curTypingAnim = findMultiAnim(typingIndex, curTypingIndex);
             startAnimationList(curTypingAnim);
         }
     }
@@ -428,14 +428,14 @@ typingOverride(integer isTyping) {
 }
 
 // Displays menu of animation choices
-doMultiAnimMenu( integer _animIndex, string _animType, string _currentAnim ) {
+doMultiAnimMenu(integer _animIndex, string _animType, string _currentAnim) {
     // Dialog enhancement - Fennec Wind
     // Fix - a no-mod anim with a long name will break this
 
-    list anims = llParseString2List( llList2String(overrides, _animIndex), [SEPARATOR], [] );
-    integer numAnims = llGetListLength( anims );
-    if ( numAnims > 12 ) {
-        llOwnerSay( "Too many animations, only the first 12 will be displayed.");
+    list anims = llParseString2List(llList2String(overrides, _animIndex), [SEPARATOR], []);
+    integer numAnims = llGetListLength(anims);
+    if(numAnims > 12) {
+        llOwnerSay("Too many animations, only the first 12 will be displayed.");
         numAnims = 12;
         return;
     }
@@ -444,7 +444,7 @@ doMultiAnimMenu( integer _animIndex, string _animType, string _currentAnim ) {
     integer i;
     string animNames = EMPTY;
     for(i=0; i<numAnims; i++){
-        animNames += "\n" + (string)(i+1) + ". " + llList2String( anims, i );
+        animNames += "\n" + (string)(i+1) + ". " + llList2String(anims, i);
         buttons += [(string)(i+1)];
     }
     // If no animations were configured, say so and just display an "OK" button
@@ -453,13 +453,13 @@ doMultiAnimMenu( integer _animIndex, string _animType, string _currentAnim ) {
     }
     llListenControl(listenHandle, TRUE);
     llDialog(Owner, "Select the " + _animType + " animation to use:\n\nCurrently: " + _currentAnim + animNames,
-              buttons, listenChannel );
+              buttons, listenChannel);
 }
 
 // Returns an animation from the multiAnims
 string findMultiAnim (integer _animIndex, integer _multiAnimIndex){
-    list animsList = llParseString2List( llList2String(overrides, _animIndex), [SEPARATOR], [] );
-    return llList2String( animsList, _multiAnimIndex );
+    list animsList = llParseString2List(llList2String(overrides, _animIndex), [SEPARATOR], []);
+    return llList2String(animsList, _multiAnimIndex);
 }
 
 // Returns true if we should override the current animation
@@ -474,7 +474,7 @@ integer checkAndOverride() {
 // Load all the animation names from a notecard
 loadNoteCard(){
     if(llGetInventoryKey(notecardName) == NULL_KEY) {
-        llOwnerSay( "Notecard '" + notecardName + "' does not exist, or does not have full permissions." );
+        llOwnerSay("Notecard '" + notecardName + "' does not exist, or does not have full permissions.");
         notecardName = EMPTY;
         loadInProgress = FALSE;
         return;
@@ -505,15 +505,15 @@ endNotecardLoad() {
     loadInProgress = FALSE;
     notecardName = EMPTY;
     // Restore the minimum event delay
-    llMinEventDelay( minEventDelay );
+    llMinEventDelay(minEventDelay);
 }
 
 // Initialize listeners, and reset some status variables
 initialize(){
     Owner = llGetOwner();
-    llSetTimerEvent( 0.0 );
+    llSetTimerEvent(0.0);
     if(animOverrideOn)
-        llSetTimerEvent( timerEventLength );
+        llSetTimerEvent(timerEventLength);
 
     lastAnim = EMPTY;
     lastAnimSet = EMPTY;
@@ -523,10 +523,10 @@ initialize(){
 
     // Create new listener, and turn it off
     if(listenHandle)
-        llListenRemove( listenHandle );
+        llListenRemove(listenHandle);
 
-    listenHandle = llListen( listenChannel, EMPTY, Owner, EMPTY );
-    llListenControl( listenHandle, FALSE );
+    listenHandle = llListen(listenChannel, EMPTY, Owner, EMPTY);
+    llListenControl(listenHandle, FALSE);
 }
 
 // STATE
@@ -539,19 +539,19 @@ default {
         Owner = llGetOwner();
 
         // Just a precaution, this shouldn't be on after a reset
-        if ( listenHandle )
-            llListenRemove( listenHandle );
+        if(listenHandle)
+            llListenRemove(listenHandle);
 
         // Generate the channel from the owner UUID.
-        listenChannel = ( 1 + (integer)( "0xF" + llGetSubString( llGetOwner(), 0, 6) ) );
+        listenChannel = (1 + (integer)("0xF" + llGetSubString(llGetOwner(), 0, 6)));
 
-        listenHandle = llListen( listenChannel, EMPTY, Owner, EMPTY );
+        listenHandle = llListen(listenChannel, EMPTY, Owner, EMPTY);
 
-        if ( llGetAttached() )
-            llRequestPermissions( llGetOwner(), PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS );
+        if(llGetAttached())
+            llRequestPermissions(llGetOwner(), PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS);
         // populate override list with blanks
         overrides = [];
-        for ( i=0; i<numOverrides; i++ ) {
+        for (i=0; i<numOverrides; i++) {
             overrides += [ EMPTY ];
         }
         randomStands = FALSE;
@@ -561,174 +561,197 @@ default {
         loadNoteCard();
 
         // turn off the auto-stop anim hack
-        if ( autoStopTime == 0 )
+        if(autoStopTime == 0)
             autoStop = [];
 
         llResetTime();
     }
 
-    on_rez( integer _code ) {
+    on_rez(integer _code) {
         initialize();
     }
 
-    attach( key _k ) {
-        if ( _k != NULL_KEY )
-            llRequestPermissions( llGetOwner(), PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS );
+    attach(key _k) {
+        if(_k != NULL_KEY)
+            llRequestPermissions(llGetOwner(), PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS);
     }
 
-    run_time_permissions( integer _perm ) {
-      if ( _perm != (PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS) )
+    run_time_permissions(integer _perm) {
+      if(_perm != (PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS))
          gotPermission = FALSE;
       else {
-         llTakeControls( CONTROL_BACK|CONTROL_FWD, TRUE, TRUE );
+         llTakeControls(CONTROL_BACK|CONTROL_FWD, TRUE, TRUE);
          gotPermission = TRUE;
       }
     }
 
-    link_message( integer _sender, integer _num, string _message, key _id) {
+    link_message(integer _sender, integer _num, string _message, key _id) {
 
         // Coming from an interface script
-        if ( _message == "ZHAO_RESET" ) {
-            llOwnerSay( "Resetting..." );
+        if(_message == "ZHAO_RESET") {
+            llOwnerSay("Resetting...");
             llResetScript();
 
-        } else if ( _message == "ZHAO_AOON" ) {
+        }
+        else if(_message == "ZHAO_AOON") {
             // AO On
             llOwnerSay("ON");
-            llSetTimerEvent( timerEventLength );
+            llSetTimerEvent(timerEventLength);
             animOverrideOn = TRUE;
             checkAndOverride();
 
-        } else if ( _message == "ZHAO_AOOFF" ) {
+        }
+        else if(_message == "ZHAO_AOOFF") {
             //AO OFF
             llOwnerSay("OFF");
-            llSetTimerEvent( 0.0 );
+            llSetTimerEvent(0.0);
             animOverrideOn = FALSE;
-            startNewAnimation( EMPTY, noAnimIndex, lastAnimState );
+            startNewAnimation(EMPTY, noAnimIndex, lastAnimState);
             lastAnim = EMPTY;
             lastAnimSet = EMPTY;
             lastAnimIndex = noAnimIndex;
             lastAnimState = EMPTY;
 
-        } else if ( _message == "ZHAO_STANDON" ) {
+        }
+        else if(_message == "ZHAO_STANDON") {
             // Turning on sit override
             standOverride = TRUE;
-            llOwnerSay( "Stand AO On" );
-            if ( lastAnimState == "Standing" )
-                startNewAnimation( curStandAnim, standingIndex, lastAnimState );
+            llOwnerSay("Stand AO On");
+            if(lastAnimState == "Standing")
+                startNewAnimation(curStandAnim, standingIndex, lastAnimState);
 
-        } else if ( _message == "ZHAO_STANDOFF" ) {
+        }
+        else if(_message == "ZHAO_STANDOFF") {
             // Turning off sit override
             standOverride = FALSE;
-            llOwnerSay( "Stand AO Off" );
-            if ( lastAnimState == "Standing" )
-                startNewAnimation( EMPTY, noAnimIndex, lastAnimState );
+            llOwnerSay("Stand AO Off");
+            if(lastAnimState == "Standing")
+                startNewAnimation(EMPTY, noAnimIndex, lastAnimState);
 
-        } else if ( _message == "ZHAO_SITON" ) {
+        }
+        else if(_message == "ZHAO_SITON") {
             // Turning on sit override
             sitOverride = TRUE;
-            llOwnerSay( S_SIT + "On" );
-            if ( lastAnimState == "Sitting" )
-                startNewAnimation( curSitAnim, sittingIndex, lastAnimState );
+            llOwnerSay(S_SIT + "On");
+            if(lastAnimState == "Sitting")
+                startNewAnimation(curSitAnim, sittingIndex, lastAnimState);
 
-        } else if ( _message == "ZHAO_SITOFF" ) {
+        }
+        else if(_message == "ZHAO_SITOFF") {
             // Turning off sit override
             sitOverride = FALSE;
-            llOwnerSay( S_SIT + "Off" );
-            if ( lastAnimState == "Sitting" )
-                startNewAnimation( EMPTY, noAnimIndex, lastAnimState );
+            llOwnerSay(S_SIT + "Off");
+            if(lastAnimState == "Sitting")
+                startNewAnimation(EMPTY, noAnimIndex, lastAnimState);
 
-        } else if ( _message == "ZHAO_SITANYWHERE_ON" ) {
+        }
+        else if(_message == "ZHAO_SITANYWHERE_ON") {
             // Turning on sit anywhre mod
             sitAnywhereOn = TRUE;
-            llOwnerSay( S_SIT_AW + "On" );
-            if ( lastAnimState == "Standing" )
-                startNewAnimation( curGsitAnim, sitgroundIndex, lastAnimState );
+            llOwnerSay(S_SIT_AW + "On");
+            if(lastAnimState == "Standing")
+                startNewAnimation(curGsitAnim, sitgroundIndex, lastAnimState);
 
-        } else if ( _message == "ZHAO_SITANYWHERE_OFF" ) {
+        }
+        else if(_message == "ZHAO_SITANYWHERE_OFF") {
             // Turning off sit anywhere mod
             sitAnywhereOn = FALSE;
-            llOwnerSay( S_SIT_AW + "Off" );
-            if ( lastAnimState == "Standing" )
-                startNewAnimation( curStandAnim, standingIndex, lastAnimState );
+            llOwnerSay(S_SIT_AW + "Off");
+            if(lastAnimState == "Standing")
+                startNewAnimation(curStandAnim, standingIndex, lastAnimState);
 
-        } else if ( _message == "ZHAO_TYPEAO_ON" ) {
+        }
+        else if(_message == "ZHAO_TYPEAO_ON") {
             // Turning on typing override
             typingOverrideOn = TRUE;
-            llOwnerSay( S_TYPING + "On" );
+            llOwnerSay(S_TYPING + "On");
             typingStatus = FALSE;
 
-        } else if ( _message == "ZHAO_TYPEAO_OFF" ) {
+        }
+        else if(_message == "ZHAO_TYPEAO_OFF") {
             // Turning off typing override
             typingOverrideOn = FALSE;
-            llOwnerSay( S_TYPING + "Off" );
-            if ( typingStatus && !typingKill ) {
+            llOwnerSay(S_TYPING + "Off");
+            if(typingStatus && !typingKill) {
                 stopAnimationList(curTypingAnim);
                 typingStatus = FALSE;
             }
-        } else if ( _message == "ZHAO_TYPEKILL_ON" ) {
+        }
+        else if(_message == "ZHAO_TYPEKILL_ON") {
             // Turning on Typing killer
             typingKill = TRUE;
-            llOwnerSay( S_TKILL_ON );
+            llOwnerSay(S_TKILL_ON);
             typingStatus = FALSE;
-        } else if ( _message == "ZHAO_TYPEKILL_OFF" ) {
+        }
+        else if(_message == "ZHAO_TYPEKILL_OFF") {
             // Turning off Typing killer
             typingKill = FALSE;
-            llOwnerSay( S_TKILL_OFF );
+            llOwnerSay(S_TKILL_OFF);
             typingStatus = FALSE;
-        } else if ( _message == "ZHAO_RANDOMSTANDS" ) {
+        }
+        else if(_message == "ZHAO_RANDOMSTANDS") {
             // Cycling to next stand - sequential or random
             randomStands = TRUE;
-            llOwnerSay( "Stand cycling: Random" );
+            llOwnerSay("Stand cycling: Random");
 
-        } else if ( _message == "ZHAO_SEQUENTIALSTANDS" ) {
+        }
+        else if(_message == "ZHAO_SEQUENTIALSTANDS") {
             // Cycling to next stand - sequential or random
             randomStands = FALSE;
-            llOwnerSay( "Stand cycling: Sequential" );
+            llOwnerSay("Stand cycling: Sequential");
 
-        } else if ( _message == "ZHAO_SETTINGS" ) {
+        }
+        else if(_message == "ZHAO_SETTINGS") {
             // Print settings
-            if ( sitOverride ) {
-                llOwnerSay( S_SIT + "On" );
-            } else {
-                llOwnerSay( S_SIT + "Off" );
+            if(sitOverride) {
+                llOwnerSay(S_SIT + "On");
             }
-            if ( sitAnywhereOn ) {
-                llOwnerSay( S_SIT_AW + "On" );
-            } else {
-                llOwnerSay( S_SIT_AW + "Off" );
+            else {
+                llOwnerSay(S_SIT + "Off");
             }
-            if ( typingOverrideOn ) {
-                llOwnerSay( S_TYPING + "On" );
-            } else {
-                llOwnerSay( S_TYPING + "Off" );
+            if(sitAnywhereOn) {
+                llOwnerSay(S_SIT_AW + "On");
             }
-            if ( typingKill ) {
-                llOwnerSay( S_TKILL_ON );
-            } else {
-                llOwnerSay( S_TKILL_OFF );
+            else {
+                llOwnerSay(S_SIT_AW + "Off");
             }
-            if ( randomStands ) {
-                llOwnerSay( "Stand cycling: Random" );
-            } else {
-                llOwnerSay( "Stand cycling: Sequential" );
+            if(typingOverrideOn) {
+                llOwnerSay(S_TYPING + "On");
             }
-            llOwnerSay( "Stand cycle time: " + (string)dialogStandTime + " seconds" );
+            else {
+                llOwnerSay(S_TYPING + "Off");
+            }
+            if(typingKill) {
+                llOwnerSay(S_TKILL_ON);
+            }
+            else {
+                llOwnerSay(S_TKILL_OFF);
+            }
+            if(randomStands) {
+                llOwnerSay("Stand cycling: Random");
+            }
+            else {
+                llOwnerSay("Stand cycling: Sequential");
+            }
+            llOwnerSay("Stand cycle time: " + (string)dialogStandTime + " seconds");
 
-        } else if ( _message == "ZHAO_NEXTSTAND" ) {
+        }
+        else if(_message == "ZHAO_NEXTSTAND") {
             // Cycling to next stand - sequential or random. This is from UI, so we
             // want feedback
-            doNextStand( TRUE );
+            doNextStand(TRUE);
 
-        } else if ( llGetSubString(_message, 0, 14) == "ZHAO_STANDTIME|" ) {
+        }
+        else if(llGetSubString(_message, 0, 14) == "ZHAO_STANDTIME|") {
             // Stand time change
             dialogStandTime = (integer)llGetSubString(_message, 15, -1);
-            llOwnerSay( "Stand cycle time: " + (string)dialogStandTime + " seconds" );
+            llOwnerSay("Stand cycle time: " + (string)dialogStandTime + " seconds");
 
-        } else if ( llGetSubString(_message, 0, 9) == "ZHAO_LOAD|" ) {
+        }
+        else if(llGetSubString(_message, 0, 9) == "ZHAO_LOAD|") {
             // Can't load while we're in the middle of a load
-            if ( loadInProgress == TRUE ) {
-                llOwnerSay( "Cannot load new notecard, still reading notecard '" + notecardName + "'" );
+            if(loadInProgress == TRUE) {
+                llOwnerSay("Cannot load new notecard, still reading notecard '" + notecardName + "'");
                 return;
             }
 
@@ -736,102 +759,107 @@ default {
             notecardName = llGetSubString(_message, 10, -1);
             loadNoteCard();
 
-        } else if ( _message == "ZHAO_SITS" ) {
+        }
+        else if(_message == "ZHAO_SITS") {
             // Selecting new sit anim
 
             // Move these to a common function
-            doMultiAnimMenu( sittingIndex, "Sitting", curSitAnim );
+            doMultiAnimMenu(sittingIndex, "Sitting", curSitAnim);
 
             listenState = 1;
 
-        } else if ( _message == "ZHAO_WALKS" ) {
+        }
+        else if(_message == "ZHAO_WALKS") {
             // Same thing for the walk
 
             // Move these to a common function
-            doMultiAnimMenu( walkingIndex, "Walking", curWalkAnim );
+            doMultiAnimMenu(walkingIndex, "Walking", curWalkAnim);
 
             listenState = 2;
 
-        } else if ( _message == "ZHAO_GROUNDSITS" ) {
+        }
+        else if(_message == "ZHAO_GROUNDSITS") {
             // And the ground sit
 
             // Move these to a common function
-            doMultiAnimMenu( sitgroundIndex, "Sitting On Ground", curGsitAnim );
+            doMultiAnimMenu(sitgroundIndex, "Sitting On Ground", curGsitAnim);
 
             listenState = 3;
         }
 
 
         //Notecard read, we get the string sent over and do some tests
-        else if ( llGetSubString(_message, 0, 11) == "END_NC_LOAD|" ) {
+        else if(llGetSubString(_message, 0, 11) == "END_NC_LOAD|") {
             //if loading was a success...
             if(_num) {
                 overrides = [];
                 //convert overrides back to a list
                 overrides = llCSV2List(llGetSubString(_message, 12, llStringLength(_message) - 1));
                 // Do we have a walking animation?
-                if ( llList2String(overrides, walkingIndex) != EMPTY ) {
+                if(llList2String(overrides, walkingIndex) != EMPTY) {
                      haveWalkingAnim = TRUE;
                 }
                 // Reset stand, walk, sit and ground-sit anims to first entry
                 curStandIndex = 0;
-                numStands = llGetListLength( llParseString2List(llList2String(overrides, standingIndex),
-                                             [SEPARATOR], []) );
+                numStands = llGetListLength(llParseString2List(llList2String(overrides, standingIndex),
+                                             [SEPARATOR], []));
 
-                numTyping = llGetListLength( llParseString2List(llList2String(overrides, typingIndex),
-                                             [SEPARATOR], []) );
+                numTyping = llGetListLength(llParseString2List(llList2String(overrides, typingIndex),
+                                             [SEPARATOR], []));
 
-                curStandAnim = findMultiAnim( standingIndex, 0 );
-                curWalkAnim = findMultiAnim( walkingIndex, 0 );
-                curSitAnim = findMultiAnim( sittingIndex, 0 );
-                curGsitAnim = findMultiAnim( sitgroundIndex, 0 );
+                curStandAnim = findMultiAnim(standingIndex, 0);
+                curWalkAnim = findMultiAnim(walkingIndex, 0);
+                curSitAnim = findMultiAnim(sittingIndex, 0);
+                curGsitAnim = findMultiAnim(sitgroundIndex, 0);
 
                 // Clear out the currently playing anim so we play the new one on the next cycle
-                startNewAnimation( EMPTY, noAnimIndex, lastAnimState );
+                startNewAnimation(EMPTY, noAnimIndex, lastAnimState);
                 lastAnim = EMPTY;
                 lastAnimSet = EMPTY;
                 lastAnimIndex = noAnimIndex;
                 lastAnimState = EMPTY;
 
-                llOwnerSay( "Finished reading notecard '" + notecardName + "'." );
+                llOwnerSay("Finished reading notecard '" + notecardName + "'.");
                 printFreeMemory();
             }
             endNotecardLoad();
         }
     }
 
-    listen( integer _channel, string _name, key _id, string _message) {
+    listen(integer _channel, string _name, key _id, string _message) {
         // Turn listen off. We turn it on again if we need to present
         // another menu
         llListenControl(listenHandle, FALSE);
 
-        if ( listenState == 1 ) {
+        if(listenState == 1) {
             // Dialog enhancement - Fennec Wind
             // Note that this is within one 'overrides' entry
-            curSitAnim = findMultiAnim( sittingIndex, (integer)_message - 1 );
-            if ( lastAnimState == "Sitting" ) {
-                startNewAnimation( curSitAnim, sittingIndex, lastAnimState );
+            curSitAnim = findMultiAnim(sittingIndex, (integer)_message - 1);
+            if(lastAnimState == "Sitting") {
+                startNewAnimation(curSitAnim, sittingIndex, lastAnimState);
             }
-            llOwnerSay( "New sitting animation: " + curSitAnim );
+            llOwnerSay("New sitting animation: " + curSitAnim);
 
-        } else if ( listenState == 2 ) {
+        }
+        else if(listenState == 2) {
             // Dialog enhancement - Fennec Wind
             // Note that this is within one 'overrides' entry
-            curWalkAnim = findMultiAnim( walkingIndex, (integer)_message - 1 );
-            if ( lastAnimState == "Walking" ) {
-                startNewAnimation( curWalkAnim, walkingIndex, lastAnimState );
+            curWalkAnim = findMultiAnim(walkingIndex, (integer)_message - 1);
+            if(lastAnimState == "Walking") {
+                startNewAnimation(curWalkAnim, walkingIndex, lastAnimState);
             }
-            llOwnerSay( "New walking animation: " + curWalkAnim );
+            llOwnerSay("New walking animation: " + curWalkAnim);
 
-        } else if ( listenState == 3 ) {
+        }
+        else if(listenState == 3) {
             // Dialog enhancement - Fennec Wind
             // Note that this is within one 'overrides' entry
-            curGsitAnim = findMultiAnim( sitgroundIndex, (integer)_message - 1 );
+            curGsitAnim = findMultiAnim(sitgroundIndex, (integer)_message - 1);
             // Lowercase 'on' - that's the anim name in SL
-            if ( lastAnimState == "Sitting on Ground" || ( lastAnimState == "Standing" && sitAnywhereOn ) ) {
-                startNewAnimation( curGsitAnim, sitgroundIndex, lastAnimState );
+            if(lastAnimState == "Sitting on Ground" || (lastAnimState == "Standing" && sitAnywhereOn)) {
+                startNewAnimation(curGsitAnim, sitgroundIndex, lastAnimState);
             }
-            llOwnerSay( "New sitting on ground animation: " + curGsitAnim );
+            llOwnerSay("New sitting on ground animation: " + curGsitAnim);
         }
     }
 
@@ -843,31 +871,31 @@ default {
         }
     }
 
-    collision_start( integer _num ) {
+    collision_start(integer _num) {
         checkAndOverride();
     }
 
-    collision( integer _num ) {
+    collision(integer _num) {
     //   checkAndOverride();
     }
 
-    collision_end( integer _num ) {
+    collision_end(integer _num) {
        checkAndOverride();
     }
 
-    control( key _id, integer _level, integer _edge ) {
-        if ( _edge ) {
+    control(key _id, integer _level, integer _edge) {
+        if(_edge) {
             // SL tends to mix animations together on forward or backward walk. It could be because
             // of anim priorities. This helps stop the default walking anims, so it won't mix with
             // the desired anim. This also lets the avi turn around on a backwards walk for a more natural
             // look.
             // Reverse the order of the checks, since we'll often get the control key combination, but we
             // may be flying
-            if ( llGetAnimation(Owner) == "Walking" ) {
-                if ( _level & _edge & ( CONTROL_BACK | CONTROL_FWD ) ) {
-                    if ( haveWalkingAnim ) {
-                        llStopAnimation( "walk" );
-                        llStopAnimation( "female_walk" );
+            if(llGetAnimation(Owner) == "Walking") {
+                if(_level & _edge & (CONTROL_BACK | CONTROL_FWD)) {
+                    if(haveWalkingAnim) {
+                        llStopAnimation("walk");
+                        llStopAnimation("female_walk");
                     }
                 }
             }
@@ -878,21 +906,21 @@ default {
 
     timer() {
         // TYPING AO!!!!!!!!!!!
-        if( ( numTyping > 0 && typingOverrideOn ) || typingKill ) {
-            integer typingTemp = llGetAgentInfo( Owner ) & AGENT_TYPING; // are we typing?
-            if ( typingTemp != typingStatus ) { //status changed since last checked?
-                typingOverride( typingTemp );
+        if((numTyping > 0 && typingOverrideOn) || typingKill) {
+            integer typingTemp = llGetAgentInfo(Owner) & AGENT_TYPING; // are we typing?
+            if(typingTemp != typingStatus) { //status changed since last checked?
+                typingOverride(typingTemp);
                 typingStatus = typingTemp;//save the current status.
             }
         }
-        if( checkAndOverride() ) {
+        if(checkAndOverride()) {
             // Is it time to switch stand animations?
             // Stand cycling can be turned off
-            if ( (standTime != 0) && ( llGetTime() > standTime ) ) {
+            if((standTime != 0) && (llGetTime() > standTime)) {
                 // Don't interrupt the typing animation with a stand change.
                 // Not from UI, no feedback
-                if ( !typingStatus )
-                    doNextStand( FALSE );
+                if(!typingStatus)
+                    doNextStand(FALSE);
             }
         }
     }
