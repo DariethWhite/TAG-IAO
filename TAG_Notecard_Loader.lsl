@@ -57,9 +57,24 @@ loadNoteCard(string card) {
                 integer tstart = llSubStringIndex(line, "[") ;
                 integer tend = llSubStringIndex(line, "]");
                 string token = llGetSubString(tstart, tend);
+                string rest = llGetSubString(line, tend+1, -1);
+                string setting = parseLine(token, line);
             }
         }
     }
+}
+
+parseLine(string token) {
+    //llListFindList return -1 on fail, using bitwise not to check.
+    integer validToken = ~llListFindList(tokens, [token]);
+    string command = "";
+    string setting = "";
+    if(!validToken) {
+        return("INVALID");
+    }
+    command = llGetSubString(token, 2, -3); //Extract Just the token.
+
+    return(setting)
 }
 
 default {
