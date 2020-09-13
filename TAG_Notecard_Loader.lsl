@@ -6,6 +6,37 @@
 //CONSTANTS
 string cardName = "Default";
 
+//tokens
+list tokens = [
+   "[ Sitting On Ground ]",    // 0
+   "[ Sitting ]",              // 1
+   "",                         // 2 - We don't allow Striding as a token
+   "[ Crouching ]",            // 3
+   "[ Crouch Walking ]",       // 4
+   "",                         // 5 - We don't allow Soft Landing as a token
+   "[ Standing Up ]",          // 6
+   "[ Falling ]",              // 7
+   "[ Flying Down ]",          // 8
+   "[ Flying Up ]",            // 9
+   "[ Flying Slow ]",          // 10
+   "[ Flying ]",               // 11
+   "[ Hovering ]",             // 12
+   "[ Jumping ]",              // 13
+   "[ Pre Jumping ]",          // 14
+   "[ Running ]",              // 15
+   "[ Turning Right ]",        // 16
+   "[ Turning Left ]",         // 17
+   "[ Walking ]",              // 18
+   "[ Landing ]",              // 19
+   "[ Standing ]",             // 20
+   "[ Swimming Down ]",        // 21
+   "[ Swimming Up ]",          // 22
+   "[ Swimming Forward ]",     // 23
+   "[ Floating ]",             // 24
+   "[ Typing ]"                // 25
+   "[ Settings ]"              // 26 this is new... we'll see how i can make it work
+];
+
 init() {
     loadNoteCard(cardName);
 }
