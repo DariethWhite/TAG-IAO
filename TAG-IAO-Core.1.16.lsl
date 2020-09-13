@@ -820,7 +820,6 @@ default {
                 lastAnimState = EMPTY;
 
                 llOwnerSay("Finished reading notecard '" + notecardName + "'.");
-                printFreeMemory();
             }
             endNotecardLoad();
         }
